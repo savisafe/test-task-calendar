@@ -45,12 +45,6 @@ const EmployeeCalendar = () => {
         }
     }, []);
 
-    const handleDateSelect = (date: Dayjs) => {
-        setSelectedDate(date.format('YYYY-MM-DD'));
-        setIsDayModalVisible(true);
-        setSearch('');
-    };
-
     const handleImportAll = (file: File) => {
         const reader = new FileReader();
         reader.onload = () => {
@@ -100,7 +94,13 @@ const EmployeeCalendar = () => {
             <h2 className="text-center">Календарь сотрудника: {author}</h2>
 
             <Calendar
-                onSelect={handleDateSelect}
+                onSelect={(date, { source }) => {
+                    if (source === 'date') {
+                        setSelectedDate(date.format('YYYY-MM-DD'));
+                        setIsDayModalVisible(true);
+                        setSearch('');
+                    }
+                }}
                 cellRender={(value: Dayjs) => {
                     const dayTasks = tasks.filter(t => t.date === value.format('YYYY-MM-DD'));
                     return <ul>{dayTasks.map((t) => <li key={t.id}>{t.title}</li>)}</ul>;
